@@ -1,13 +1,27 @@
-from calculator import add, subtract, multiply, divide
+name: CI Pipeline
 
-def test_add():
-    assert add(10, 5) == 15
+on:
+  push:
+  pull_request:
 
-def test_subtract():
-    assert subtract(10, 5) == 5
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
 
-def test_multiply():
-    assert multiply(10, 5) == 50
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v6
 
-def test_divide():
-    assert divide(10, 5) == 2
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      - name: Install testing tool
+        run: pip install pytest
+
+      - name: Build project
+        run: python -m py_compile calculator.py
+
+      - name: Run automated tests
+        run: pytest
